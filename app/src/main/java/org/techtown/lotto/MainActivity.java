@@ -3,6 +3,7 @@ package org.techtown.lotto;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import org.tensorflow.lite.Interpreter;
+import org.w3c.dom.Text;
 
 import android.Manifest;
 import android.app.Activity;
@@ -10,6 +11,9 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -30,10 +34,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         verifyStoragePermissions(this);
-        List<int[]> numbers = new GenerateNumbers().listNumbers;
-        for(int i=0;i<numbers.size();i++){
-            Log.d("onCreate", Arrays.toString(numbers.get(i)));
-        }
+        ArrayList<TextView> list = new ArrayList<>();
+        Button button = (Button) findViewById(R.id.button);
+        TextView textView1 = (TextView) findViewById(R.id.textView1);
+        TextView textView2 = (TextView) findViewById(R.id.textView2);
+        TextView textView3 = (TextView) findViewById(R.id.textView3);
+        TextView textView4 = (TextView) findViewById(R.id.textView4);
+        TextView textView5 = (TextView) findViewById(R.id.textView5);
+        list.add(textView1);
+        list.add(textView2);
+        list.add(textView3);
+        list.add(textView4);
+        list.add(textView5);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<int[]> numbers = new GenerateNumbers().listNumbers;
+                for(int i=0;i<numbers.size();i++){
+                    //Log.d("onCreate", Arrays.toString(numbers.get(i))); //출력 부분
+                    list.get(i).setText(Arrays.toString(numbers.get(i)));
+                }
+            }
+        });
     }
 
     private static String[] PERMISSIONS_STORAGE = {
@@ -60,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                 Interpreter.Options options = new Interpreter.Options();
                 Interpreter interpreter = new Interpreter(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "model.tflite"), options);
 
-                InputStream inputStream = new FileInputStream(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "lotto.txt"));
+                InputStream inputStream = new FileInputStream(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "lotto.csv"));
                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
                 String line = "";
                 while ((line = reader.readLine()) != null){
@@ -110,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
                     for (int i = 0; i < numbers.length; i++) {
                         numbers_int[i] = (int) numbers[i];
                     }
-                    System.out.format("%d : %s\n", (n + 1), Arrays.toString(numbers_int));
+                    //System.out.format("%d : %s\n", (n + 1), Arrays.toString(numbers_int)); //출력 부분
                     listNumbers.add(numbers_int);
                 }
             } catch (Exception e) {
